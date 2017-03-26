@@ -1,0 +1,12 @@
+@import ('font.css');
+* {
+    font-family: Open Sans;
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+.content {
+    font-weight: 100;
+    font-size: 12px;
+}

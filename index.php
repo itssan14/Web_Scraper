@@ -1,48 +1,45 @@
 <?php
+
+require("view/index.view.php");
+include_once ('DOM/simple_html_dom.php') ;
+$page = "http://www.etauto.com";
 error_reporting(E_ERROR | E_WARNING | E_PARSE);
 
-include_once ('DOM/simple_html_dom.php') ;
 //GETTING HTML PAGE
-$html = file_get_html ('http://www.etauto.com');
+$html= new simple_html_dom();
+$html -> load_file($page);
+global $articles;
 
-//HEADLINES
-foreach ($html -> find('li[class=story-box clearfix]') as $target)
-{
-    $article['title'] = $target->find ('h1', 0);
-    $article['img'] = $target ->find('div.image a img.unveil',1);
-    foreach ($article as $result)
+
+/*-----HEADLINES------*/
+$headline= $html->find('li[class=story-box clearfix] h1',0) ;
+$headline->class="headline";
+echo '<h3><b>',$headline->innertext,'</b></h2>';
+$headimg= $html->find('li[class=story-box clearfix] div.image',0) ;
+echo $headimg;
+
+
+/*-----ARTICLES------*/
+$x=0;
+$k=0;
+for($j=10,$i=0; $j>=$i ;$i++)
+{   
+    /*ARTICLE TITLE*/
+    $title = $html->find('li[class=story-box clearfix] h2',$i);
+    echo '<h3><b>',$title ->innertext,'</b></h3>';
+    if ($i!=4 && $i!=6)
     {
-        echo $result;
-    }
+        $n = $i%2;
+        if ($i!=0 && $n==0 || $i==5) 
+        {   
+            $x++;
+            /*-----IMAGE FETCH-----*/
+            $image = $html->find('li[class=story-box clearfix] div.image a',$x);
+            echo $image;
+            /*-----CONTENT FETCH-----*/
+            $content = $html->find('li[class=story-box clearfix] p',$k);
+            echo '<div class="content">',$content->innertext,'</div>';
+            $k++;
+        }
+    } 
 }
-
-//ARTICLES
-foreach ($html -> find('li[class=story-box clearfix]') as $target)
-{
-    $article1['title'] = $target->find ('h2', 0);
-    $article1['img'] = $target ->find('div.image a', 0);
-    $article1['paragraph'] = $target ->find('p', 0);
-    foreach ($article1 as $ret)
-    {
-        echo $ret;
-    }
-
-}
-
-//WIDGETS - COL 1
-foreach ($html -> find('div.widget',1) as $sld)
-{
-    echo $sld;
-}
-
-//WIDGETS - COL 2
-foreach ($html -> find('div.wdgt', 2) as $sld)
-{
-    echo $sld;
-}
-
-
-
-
-
-
